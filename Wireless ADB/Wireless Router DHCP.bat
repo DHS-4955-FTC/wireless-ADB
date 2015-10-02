@@ -1,0 +1,17 @@
+
+echo --  Starting ADB
+adb kill-server
+echo --  Make sure the phone is connected to the computer via USB
+set /p ok= --  Hit enter when phone is plugged in: 
+adb usb
+Timeout 10
+adb tcpip 5555
+echo.
+echo --  Make sure your phone ALSO is connected to the "Router" network.
+echo --  Click the Settings-WiFi link to get the first phone's IP address
+set /p phoneip="Enter the IP address here: "
+adb connect %phoneip%
+adb devices
+set /p ok= Unplug the phone and hit Enter to see the final connection.
+adb devices
+pause
