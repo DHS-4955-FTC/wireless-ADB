@@ -1,4 +1,4 @@
-﻿@rem
+﻿@REM
 @echo off
 setlocal EnableExtensions
 goto check_Permissions
@@ -14,7 +14,7 @@ REM Code block that checks for administrative permissions.
         goto intro_good
     ) else (
         cls
-	echo.
+	  echo.
         echo  --- Failure: Current permissions inadequate. ---
         echo.
 	    echo          --- Hit enter to get help ---
@@ -53,7 +53,7 @@ REM Intro if "Wireless-ADB.bat" was run normally.
     echo.
     echo                   ~ Step 1 ~
     echo ------------------------------------------------
-    echo Right Click on the "Wireless-ABD.bat" file.   
+    echo Right Click on the "Wireless-ABD.bat" file.
     echo ------------------------------------------------
     echo.
     echo                   ~ Step 2 ~
@@ -61,38 +61,50 @@ REM Intro if "Wireless-ADB.bat" was run normally.
     echo Move the cursor down to "Run as administrator"
     echo ------------------------------------------------
     echo.
-    echo Note: For this to work, you must have Admin rights. 
+    echo Note: For this to work, you must have Admin rights.
     echo       You must either be loged in as Administrator,
     echo       or have the login info.
     echo.
     pause
     exit
-    
- :user_name
+
+:user_name
+    set /p userName="Name: "
    goto pick_path
 
 :pick_path
    cls
-   echo [Wireless ADB Programs] --------------------------------
+   echo [Wireless ADB Programs] ------------------------------------------------
    echo   1 -- Connect to phone with external router
    echo   2 -- Connect with Hosted Network
    echo   3 -- Hosted Network Setup
    echo   4 -- Help
-   echo.  
+   echo.
    echo   4 -- Exit
    echo.
    set /P choiceADB="Enter a choice: "
-   echo --------------------------------------------------------
+   echo ------------------------------------------------------------------------
    for %%I in (1 2 3 4 5 x) do if #%choiceADB%==#%%I goto choice%%I
    goto pick_path
-   
+
 :choice1
+   cls
+   echo loading. . .
+   adb kill-server
+   echo loading. . .
+   netsh wlan stop hostednetwork
+   echo loading. . .
+   netsh wlan set hostednetwork mode=allow
+   echo Done!
+
+
+
    cls
    echo.
    echo --  Starting ADB
    adb kill-server
    echo --  Make sure the phone is connected to the computer via USB
-   set /p ok= --  Hit enter when phone is plugged in: 
+   set /p ok= --  Hit enter when phone is plugged in:
    adb usb
    Timeout 10
    adb tcpip 5555
@@ -106,22 +118,130 @@ REM Intro if "Wireless-ADB.bat" was run normally.
    adb devices
    pause
 
-   
+
 
 :choice2
    cls
    echo.
    echo Choice 2!
    pause
-   
+
 
 
 :choice3
    cls
    echo.
-   echo Choice 3
-   pause
-   
+   echo [Hosted Network Setup]--------------------------------------------------
+   echo   1 -- Inital Setup
+   echo   2 -- Set/Change Password
+   echo   3 -- Set/Change Network Name [SSID]
+   echo   4 -- View Current settings
+   echo   5 -- Help
+   echo.
+   echo   6 -- Exit
+   echo.
+   set /P HNmenu="Enter a choice: "
+   echo ------------------------------------------------------------------------
+   for %%g in (1 2 3 4 5 6 x) do if #%HNmenu%==#%%g goto hnset%%g
+   goto choice3
+
+:hnset1
+  cls
+  echo.
+  echo [Inital Hosted Network Setup]--------------------------------------------
+  echo.
+  echo   For your inital set up, we'll need 2 things...
+  echo     1: A password that is strong. If its not strong, BAD things happen!
+  echo     2: A network name [SSID] of your choosing.
+  echo.
+  set /p ok= -- Press Enter When Ready. . .
+  goto WifiPass
+
+:WifiPass
+  echo.
+  echo ###########################################################
+  echo #                                                         #
+  echo #             Below you will set the password.            #
+  echo #          Password MUST be 8 characters or more!         #
+  echo #                                                         #
+  echo ###########################################################
+  echo.
+  set /p wifipass= -- Enter the password you want:
+  netsh wlan set hostednetwork key=%wifipass%
+  IF %ERRORLEVEL% == 0 (
+      goto SSID
+  ) ELSE (
+  	cls
+  	goto WifiError
+  )
+:WifiError
+  echo.
+  echo Im sorry, but you must chose a password that has
+  echo more then 8 characters. You CANNOT start the Hosted Network
+  echo if there is not at least 8 characters.
+  echo.
+  set/p ok= Press Enter to fix password. . .
+  cls
+  goto WifiPass
+
+:SSID
+  cls
+  echo.
+  echo ###########################################################
+  echo #                                                         #
+  echo #         Below you will name the Hosted Network.         #
+  echo # This is what you'll see in the wifi menu of your phone. #
+  echo #                                                         #
+  echo ###########################################################
+  echo.
+  set /p wifiname= -- Enter the name of the Hosted Network:
+  echo loading. . .
+  echo.
+  netsh wlan set hostednetwork SSID=%wifiname%
+  echo.
+
+:Pass-Name
+  cls
+  echo.
+  echo -------------------------------------------------------------------------
+  echo   Hit enter to review your password and SSID
+  echo -------------------------------------------------------------------------
+  pause
+  echo Password Being Used:
+  echo "%wifipass%"
+  echo.
+  echo SSID Being USed:
+  echo "%wifiname%"
+  echo.
+  pause
+  goto pick_path
+
+:hnset2
+echo ###########################################################
+echo #                                                         #
+echo #             Below you will set the password.            #
+echo #          Password MUST be 8 characters or more!         #
+echo #                                                         #
+echo ###########################################################
+echo.
+set /p wifipass= -- Enter to change the Password:
+netsh wlan set hostednetwork key=%wifipass%
+IF %ERRORLEVEL% == 0 (
+    goto choice3
+) ELSE (
+  cls
+  goto WifiError2
+)
+
+:WifiError2
+  echo.
+  echo Im sorry, but you must chose a password that has
+  echo more then 8 characters. You CANNOT start the Hosted Network
+  echo if there is not at least 8 characters.
+  echo.
+  set/p ok= Press Enter to fix password. . .
+  cls
+  goto hnset2
 
 
 :choice4
@@ -129,4 +249,3 @@ REM Intro if "Wireless-ADB.bat" was run normally.
    echo.
    echo Choice 4
    pause
-  
