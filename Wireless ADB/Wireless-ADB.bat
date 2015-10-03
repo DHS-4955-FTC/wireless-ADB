@@ -9,25 +9,20 @@ REM Code block that checks for administrative permissions.
 
     net session >nul 2>&1
     if %errorLevel% == 0 (
-        echo Success: Administrative permissions confirmed.
-        timeout 1
         goto intro_good
     ) else (
         cls
-	  echo.
-        echo  --- Failure: Current permissions inadequate. ---
+        echo -------------------------------------------------------------------
+        echo Failure: Current permissions inadequate.
+        echo -------------------------------------------------------------------
         echo.
-	    echo          --- Hit enter to get help ---
-	pause >nul
+	      pause
         goto intro_bad
     )
-
-    pause >nul
 
 REM Intro if "Wireless-ADB.bat" was "Run as administrator".
 :intro_good
     cls
-    echo.
     echo ############################################
     echo #                                          #
     echo # Hello! To start, please enter your name. #
@@ -39,31 +34,29 @@ REM Intro if "Wireless-ADB.bat" was "Run as administrator".
 
 REM Intro if "Wireless-ADB.bat" was run normally.
 :intro_bad
-    timeout 1
+    cls
+    echo              ######################################
+    echo              #                                    #
+    echo              # The "Wireless-ADB.bat" was not run #
+    echo              # with Administrative permissions.   #
+    echo              #                                    #
+    echo              ######################################
     echo.
-    echo     ######################################
-    echo     #                                    #
-    echo     # The "Wireless-ADB.bat" was not run #
-    echo     # with Administrative permissions.   #
-    echo     #                                    #
-    echo     ######################################
+    echo              ###   To "Run as administrator",   ###
+    echo              ###    Follow the steps below.     ###
     echo.
-    echo     ###   To "Run as administrator",   ###
-    echo     ###    Follow the steps below.     ###
-    echo.
-    echo                   ~ Step 1 ~
-    echo ------------------------------------------------
+    echo                          ~ Step 1 ~
+    echo -----------------------------------------------------------------------
     echo Right Click on the "Wireless-ABD.bat" file.
-    echo ------------------------------------------------
+    echo -----------------------------------------------------------------------
     echo.
-    echo                   ~ Step 2 ~
-    echo ------------------------------------------------
+    echo                          ~ Step 2 ~
+    echo -----------------------------------------------------------------------
     echo Move the cursor down to "Run as administrator"
-    echo ------------------------------------------------
+    echo -----------------------------------------------------------------------
     echo.
-    echo Note: For this to work, you must have Admin rights.
-    echo       You must either be loged in as Administrator,
-    echo       or have the login info.
+    echo Note: For this to work, you must have Admin rights. That means,
+    echo       you MUST be logged in as Administrator.
     echo.
     pause
     exit
@@ -80,7 +73,7 @@ REM Intro if "Wireless-ADB.bat" was run normally.
    echo   3 -- Hosted Network Setup
    echo   4 -- Help
    echo.
-   echo   4 -- Exit
+   echo   5 -- Exit
    echo.
    set /P choiceADB="Enter a choice: "
    echo ------------------------------------------------------------------------
@@ -89,44 +82,19 @@ REM Intro if "Wireless-ADB.bat" was run normally.
 
 :choice1
    cls
-   echo loading. . .
-   adb kill-server
-   echo loading. . .
-   netsh wlan stop hostednetwork
-   echo loading. . .
-   netsh wlan set hostednetwork mode=allow
-   echo Done!
-
-
-
-   cls
+   echo ### Under Development ###
    echo.
-   echo --  Starting ADB
-   adb kill-server
-   echo --  Make sure the phone is connected to the computer via USB
-   set /p ok= --  Hit enter when phone is plugged in:
-   adb usb
-   Timeout 10
-   adb tcpip 5555
-   echo.
-   echo --  Make sure your phone ALSO is connected to the "Router" network.
-   echo --  Click the Settings-WiFi link to get the first phone's IP address
-   set /p phoneip="Enter the IP address here: "
-   adb connect %phoneip%
-   adb devices
-   set /p ok= Unplug the phone and hit Enter to see the final connection.
-   adb devices
-   pause
-
-
+   echo Going to Main Menu.........
+   timeout 3
+   goto pick_path
 
 :choice2
    cls
+   echo ### Under Development ###
    echo.
-   echo Choice 2!
-   pause
-
-
+   echo Going to Main Menu.........
+   timeout 3
+   goto pick_path
 
 :choice3
    cls
@@ -217,21 +185,21 @@ REM Intro if "Wireless-ADB.bat" was run normally.
   goto pick_path
 
 :hnset2
-echo ###########################################################
-echo #                                                         #
-echo #             Below you will set the password.            #
-echo #          Password MUST be 8 characters or more!         #
-echo #                                                         #
-echo ###########################################################
-echo.
-set /p wifipass= -- Enter to change the Password:
-netsh wlan set hostednetwork key=%wifipass%
-IF %ERRORLEVEL% == 0 (
-    goto choice3
-) ELSE (
-  cls
-  goto WifiError2
-)
+  echo ###########################################################
+  echo #                                                         #
+  echo #             Below you will set the password.            #
+  echo #          Password MUST be 8 characters or more!         #
+  echo #                                                         #
+  echo ###########################################################
+  echo.
+  set /p wifipass= -- Enter to change the Password:
+  netsh wlan set hostednetwork key=%wifipass%
+  IF %ERRORLEVEL% == 0 (
+      goto choice3
+      ) ELSE (
+        cls
+        goto WifiError2
+      )
 
 :WifiError2
   echo.
@@ -246,6 +214,22 @@ IF %ERRORLEVEL% == 0 (
 
 :choice4
    cls
+   echo ### Under Development ###
    echo.
-   echo Choice 4
-   pause
+   echo Going to Main Menu.........
+   timeout 3
+   goto pick_path
+
+:choice5
+   goto _exit
+
+:_exit
+  pause
+  cls
+  echo -------------------------------------------------------------------------
+  echo Thank you for using our program!!!
+  echo -Dimond High Programing Team
+  echo -------------------------------------------------------------------------
+  echo.
+  PAUSE
+  EXIT /B 1
