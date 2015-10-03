@@ -227,8 +227,15 @@ REM Intro if "Wireless-ADB.bat" was run normally.
   pause
   cls
   echo -------------------------------------------------------------------------
-  echo Thank you for using our program!!!
-  echo -Dimond High Programing Team
+  echo Here at Dimond Robotics, we strive to be the best. We want to say thank
+  echo you for using our program for your Wireless ADB needs. Please respect
+  echo us by not taking our code. We spent a lot of time to bring this to you.
+  echo Eventually we will intergrate our code here into a more visual app.
+  echo Basically, respect our copyright to this program. If there is any changes
+  echo you want to make, make sure to some how credit us. We would love your
+  echo feedback. Good luck, and happy programing!!!
+  echo.
+  echo -Dimond High School Programming Team
   echo -------------------------------------------------------------------------
   echo.
   PAUSE
