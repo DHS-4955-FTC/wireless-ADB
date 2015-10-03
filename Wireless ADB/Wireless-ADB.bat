@@ -19,6 +19,7 @@ REM Code block that checks for administrative permissions.
 	      pause
         goto intro_bad
     )
+rem test
 
 REM Intro if "Wireless-ADB.bat" was "Run as administrator".
 :intro_good
